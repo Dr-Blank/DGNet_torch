@@ -1,0 +1,1 @@
+This is the pytorch implementation of the paper "Deep Gradient Learning for Efficient Camouflaged Object Detection" by Ge-Peng Ji, Deng-Ping Fan, Yu-Cheng Chou, Dengxin Dai, Alexander Liniger, Luc Van Gool. The paper can be found [here](https://doi.org/10.48550/arXiv.2205.12853).
