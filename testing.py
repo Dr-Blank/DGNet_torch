@@ -1,19 +1,21 @@
-import os
-import torch
+# modified for windows 10 and new datasets
+# by: Trupal Patel
+# date: 2022-11-11
+
 import argparse
-import numpy as np
-from scipy import misc
-import imageio
+import os
 from pathlib import Path
 
-import torch.nn.functional as F
+import imageio
+import numpy as np
+import torch
 import torch.backends.cudnn as cudnn
+import torch.nn.functional as F
 
-# from torchvision.models.utils import load_state_dict_from_url
 from torch.hub import load_state_dict_from_url
 
-from utils.dataset import test_dataset as EvalDataset
 from lib import DGNet, ModelParams
+from utils.dataset import test_dataset as EvalDataset
 
 
 def evaluator(model, val_root, map_save_path, trainsize=352):
@@ -40,8 +42,7 @@ def evaluator(model, val_root, map_save_path, trainsize=352):
             print(">>> saving prediction at: {}".format(map_save_path + name))
 
 
-
-def main():
+def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model",
@@ -64,7 +65,14 @@ def main():
         help="snapshot path of trained model",
     )
     parser.add_argument("--gpu_id", type=str, default="0", help="train use gpu")
-    opt = parser.parse_args()
+
+    parser.add_argument("--dataset", type=str, default="MOCA", help="dataset")
+
+    return parser
+
+
+def main():
+    opt = get_parser().parse_args()
 
     txt_save_path = Path("./result/{}/".format(opt.snap_path.split("/")[-2]))
     txt_save_path.mkdir(parents=True, exist_ok=True)
@@ -82,28 +90,30 @@ def main():
     model.load_state_dict(torch.load(opt.snap_path))
     model.eval()
 
-    # for data_name in ['CamouflageData']:
-    # # for data_name in ['CAMO', 'COD10K', 'NC4K']:
-    #     map_save_path = str(txt_save_path) + "{}/".format(data_name)
-    #     os.makedirs(map_save_path, exist_ok=True)
-    #     evaluator(
-    #         model=model,
-    #         val_root='./dataset/TestDataset/' + data_name + '/',
-    #         map_save_path=map_save_path,
-    #         trainsize=352)
+    match opt.dataset:
+        case "MOCA":
+            MOCA = Path("./dataset/TestDataset/MOCA")
 
-    MOCA = Path("./dataset/TestDataset/MOCA")
+            # for every folder in MOCA
+            for folder in MOCA.iterdir():
+                map_save_path = txt_save_path / MOCA.name / folder.name
+                os.makedirs(map_save_path, exist_ok=True)
+                evaluator(
+                    model=model,
+                    val_root=str((MOCA / folder.name).resolve()) + "/",
+                    map_save_path=str(map_save_path.resolve()) + "/",
+                    trainsize=352,
+                )
 
-    # for every folder in MOCA
-    for folder in MOCA.iterdir():
-        map_save_path = txt_save_path / MOCA.name / folder.name
-        os.makedirs(map_save_path, exist_ok=True)
-        evaluator(
-            model=model,
-            val_root=str((MOCA / folder.name).resolve()) + "/",
-            map_save_path=str(map_save_path.resolve()) + "/",
-            trainsize=352,
-        )
+        case ["CAMO", "COD10K", "NC4K", "CamouflageData"]:
+            map_save_path = str(txt_save_path) + "{}/".format(opt.dataset)
+            os.makedirs(map_save_path, exist_ok=True)
+            evaluator(
+                model=model,
+                val_root="./dataset/TestDataset/" + opt.dataset + "/",
+                map_save_path=map_save_path,
+                trainsize=352,
+            )
 
 
 if __name__ == "__main__":
