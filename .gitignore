@@ -1,3 +1,7 @@
 # python ignores
 *.pyc
 __pycache__
+
+dataset
+result
+temp*
