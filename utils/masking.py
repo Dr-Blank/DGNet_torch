@@ -1,11 +1,7 @@
 """ make video from predicted masks and true images """
 
-import os
-import os.path as osp
-from glob import glob
 from pathlib import Path
 
-import cv2
 import imageio
 import numpy as np
 from PIL import Image
