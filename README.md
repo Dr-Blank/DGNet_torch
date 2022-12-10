@@ -22,3 +22,13 @@ just run `python train.py` and it will run the training on the COD10K dataset. Y
 `masking.py`:
    - creates mask for MoCA dataset and makes a video of the masked images
 
+
+# References
+```
+@article{ji2023gradient,
+  title={Deep Gradient Learning for Efficient Camouflaged Object Detection},
+  author={Ji, Ge-Peng and Fan, Deng-Ping and Chou, Yu-Cheng and Dai, Dengxin and Liniger, Alexander and Van Gool, Luc},
+  journal={Machine Intelligence Research},
+  year={2023}
+} 
+```
