@@ -1,0 +1,14 @@
+numpy
+opencv-python
+Pillow
+prettytable
+scikit-learn
+scipy
+six
+sklearn
+tensorboardX
+timm
+tqdm
+imageio
+imageio[ffmpeg]
+
