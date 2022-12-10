@@ -5,5 +5,5 @@ This is modified to work with 2 new datasets:
 * Military Camouflage Dataset (MCD)
 * MoCA Video Dataset
 
-masking.py: # Path: masking.py
+`masking.py`:
    - creates mask for MoCA dataset and makes a video of the masked images
