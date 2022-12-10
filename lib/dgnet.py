@@ -1,6 +1,12 @@
+# [reference] https://github.com/GewelsJI/DGNet
+# this was adapted to run on windows and newer versions of pytorch
+# the minimum python version is 3.10
+# code was adapted to run on MoCA dataset and make it easier to use for videos
+
 # torch libraries
 from dataclasses import dataclass, field
 from typing import List
+
 import torch
 import torch.nn as nn
 
@@ -172,8 +178,12 @@ class TextureEncoder(nn.Module):
 
 
 class DGNet(nn.Module):
-    def __init__(self, channel=32, arc="B0", M=[8, 8, 8], N=[4, 8, 16]):
+    def __init__(self, channel=32, arc="B0", M=None, N=None):
         super().__init__()
+        if M is None:
+            M = [8, 8, 8]
+        if N is None:
+            N = [4, 8, 16]
 
         match arc:
             case "EfficientNet-B1":
@@ -254,6 +264,7 @@ class ModelParams:
     M: List[int] = field(default_factory=lambda: [8, 8, 8])
     N: List[int] = field(default_factory=lambda: [4, 8, 16])
 
+    @staticmethod
     def get_params(model_name: str):
         """
         get model parameters
